@@ -1,0 +1,18 @@
+.icone {
+  object-fit: cover;
+  width: 32px;
+  height: 32px;
+}
+
+.blur {
+  backdrop-filter: blur(5px);
+}
+
+.ratio {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.item-data p {
+  font-size: small;
+}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %} {% load static %} {% load redirect %} {% block head %}
+<link href="{% static 'css/produtos.css' %}" rel="stylesheet" />
+{% endblock head %}
+
+<!--- Tela de demonstração do produto -->
+{% block content %}
+<div class="px-5 py-4">
+  <div class="d-flex flex-row gap-3">
+    <div class="filtro col-3 gap-3 d-flex flex-column bg-dark p-3 border border-dark rounded">
+      {% if dados.categorias %}
+      <div class="categorias">
+        <h5 class="text-center">Categorias</h5>
+        {% for categoria in dados.categorias %}
+        <span class="categoria clickable badge text-bg-light{% if categoria.id in dados.selected_categorias %} active{% endif %}" data-id="{{ categoria.id }}"
+          >{{ categoria.nome }}</span
+        >
+        {% endfor %}
+      </div>
+      {% endif %} {% if dados.subCategorias %}
+      <div class="sub-categorias">
+        <h5 class="text-center">Sub-Categorias</h5>
+        {% for subcategoria in dados.subCategorias %}
+        <span class="sub-categoria clickable badge text-bg-light{% if subcategoria.id in dados.selected_subcategorias %} active{% endif %}" data-id="{{ subcategoria.id }}"
+          >{{ subcategoria.nome }}</span
+        >
+        {% endfor %}
+      </div>
+      {% endif %} {% if dados.tags %}
+      <div class="tags">
+        <h5 class="text-center">Tags</h5>
+        {% for tag in dados.tags %}
+        <span class="tag clickable badge text-bg-light{% if tag.id in dados.selected_tags %} active{% endif %}" data-id="{{ tag.id }}">{{ tag.nome }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <button class="btn btn-primary btn-block">Filtrar</button>
+    </div>
+    <div class="produtos col-9 gap-2 p-3 bg-dark border border-dark rounded">
+      <div class="d-flex flex-row">
+        <h5>Produtos</h5>
+        <div class="d-flex ms-auto flex-column">
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{ dados.ordem.1 }}</button>
+            <ul class="dropdown-menu">
+              {% for key, name in dados.ordens %}
+              <li>
+                <a class="dropdown-item btn-order" href="{% redirect order_by=key %}">{{ name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="pt-1 d-flex flex-column gap-2">
+        {% if dados.paginacao.object_list %} {% for produto in dados.paginacao.object_list %}
+        <div class="produto d-flex flex-row gap-3">
+          <img src="{{ produto.imagens.all.first.imagem.url }}" class="image col-3 rounded border border-little" />
+          <div class="col-9">
+            <div class="col-9 text-truncate">
+              <h5>{{ produto.nome }}</h5>
+              <p class="text-truncate">{{ produto.descricao }}</p>
+            </div>
+            <p class="py-1">
+              <span class="badge text-bg-light">{{ produto.preco }}</span>
+            </p>
+            <a href="{% url 'produto' id=produto.id %}" class="btn btn-sm btn-primary"> Detalhes </a>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="alert alert-warning" role="alert">Nenhum produto encontrado.</div>
+        {% endif %}
+      </div>
+      <div class="d-flex justify-content-center">
+        <nav aria-label="Navegação de Pagina">
+          <ul class="pagination">
+            <li class="page-item{% if not dados.paginacao.has_previous %} disabled{% endif %}">
+              <a class="page-link" {% if dados.paginacao.has_previous %}href="{% redirect pagina=dados.paginacao.previous_page_number %}" {% endif %}>Voltar</a>
+            </li>
+            <li class="page-item">
+              {% for i in dados.paginacao.paginator.page_range %} {% if paginacao.number == i %}
+              <a class="page-link">{% redirect pagina=i %} </a>
+              {% else %}
+              <a class="page-link" href="{% redirect pagina=i %}">{{ i }}</a>
+              {% endif %} {% endfor %}
+            </li>
+            <li class="page-item{% if not dados.paginacao.has_next %} disabled{% endif %}">
+              <a class="page-link" {% if dados.paginacao.has_next %}href="{% redirect dados.paginacao.next_page_number %}" {% endif %}>Proxímo</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</div>
+{% block js %}
+<script src="{% static 'js/filter.js' %}"></script>
+{% endblock js %}

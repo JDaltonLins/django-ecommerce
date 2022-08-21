@@ -1,0 +1,39 @@
+.produto {
+  max-height: 150px;
+}
+
+.produto .image {
+  object-fit: cover;
+}
+
+.produtos {
+  height: fit-content;
+}
+.produto > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100%;
+}
+.produto p,
+.produto h3 {
+  margin: 0;
+}
+
+.filtro {
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.clickable {
+  transition: all cubic-bezier(0.075, 0.82, 0.165, 1) ease-in 0.2s;
+}
+.clickable.active {
+  background-color: #ffc107 !important;
+}
+.clickable:hover {
+  background-color: #d39000 !important;
+  border: solid 1px #d3900077 !important;
+}

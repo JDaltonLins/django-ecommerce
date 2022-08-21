@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<link href="{% static 'css/login.css' %}" rel="stylesheet" />
+{% endblock head %} {% block content %}
+<form class="d-flex flex-column gap-2 bg-dark border-dark p-4 rounded" method="POST">
+  <h3 class="text-center mb-5">Cadastro</h3>
+  <div class="form-group">
+    <input class="form-control" placeholder="E-mail" minlength="8" name="email" type="email" maxlength="50" {% if dados.email %}value="{{ dados.email }}" {% endif %} autofocus />
+  </div>
+  <div class="form-group">
+    <input class="form-control" placeholder="Usuário" minlength="8" name="username" type="text" maxlength="50" {% if dados.username %}value="{{ dados.username }}" {% endif %} />
+  </div>
+  <div class="form-group">
+    <input class="form-control" placeholder="Senha" minlength="6" maxlength="20" name="password" type="password" />
+  </div>
+  <hr />
+  {% if dados.error %}
+  <div class="alert alert-danger p-1" role="alert">{{ dados.error }}</div>
+  {% endif %} {% csrf_token %}
+  <button type="submit" class="btn btn-lg btn-light btn-block">Criar</button>
+</form>
+{% endblock %}

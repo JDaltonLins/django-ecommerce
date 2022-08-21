@@ -1,0 +1,10 @@
+.produto {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ratio {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}

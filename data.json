@@ -1,0 +1,108 @@
+[
+  {
+    "model": "principal.estoqueproduto",
+    "pk": 1,
+    "fields": {
+      "nome": "🔥 League of Legends 🏹",
+      "descricao": "Um jogo completamente grátuito no estilo MMO RPG para você e seus amigos se divertirem",
+      "informacoes": "🎮 É um jogo espetacular, venha jogar você também!",
+      "preco": "0.00",
+      "categoria": 1,
+      "data_lancamento": null,
+      "subcategorias": [5],
+      "tags": [1],
+      "imagens": [1]
+    }
+  },
+  {
+    "model": "principal.estoqueproduto",
+    "pk": 2,
+    "fields": {
+      "nome": "🧙‍♀️ Evelyyn - Congregação das Bruxas 🌟",
+      "descricao": "Essa skin vai deixar qualquer um com medo de ser pego por bruxas",
+      "informacoes": "🧙‍♀️ Evelyyn - Congregação das Bruxas 🌟",
+      "preco": "100.00",
+      "categoria": 2,
+      "data_lancamento": null,
+      "subcategorias": [6],
+      "tags": [1, 4],
+      "imagens": [2]
+    }
+  },
+  {
+    "model": "principal.estoqueproduto",
+    "pk": 3,
+    "fields": {
+      "nome": "🎙 Evelyyn - KDA All Out ✨",
+      "descricao": "Repleta de luz, brilho e glamour essa skin vai deixar qualquer um aos seus olhos",
+      "informacoes": "🎙 Evelyyn - KDA All Out ✨",
+      "preco": "100.00",
+      "categoria": 2,
+      "data_lancamento": null,
+      "subcategorias": [1, 2, 3],
+      "tags": [1, 4],
+      "imagens": [3]
+    }
+  },
+  { "model": "principal.estoqueprodutoimagem", "pk": 1, "fields": { "imagem": "produtos/league-of-legends.jfif" } },
+  { "model": "principal.estoqueprodutoimagem", "pk": 2, "fields": { "imagem": "produtos/evelynn-congregacao-das-bruxas.webp" } },
+  { "model": "principal.estoqueprodutoimagem", "pk": 3, "fields": { "imagem": "produtos/evelynn-kda-all-out.jpg" } },
+  { "model": "principal.estoqueprodutocategoria", "pk": 1, "fields": { "nome": "Jogos", "mostrar_inicio": true } },
+  { "model": "principal.estoqueprodutocategoria", "pk": 2, "fields": { "nome": "Skins", "mostrar_inicio": true } },
+  { "model": "principal.estoqueprodutosubcategoria", "pk": 1, "fields": { "nome": "Ação" } },
+  { "model": "principal.estoqueprodutosubcategoria", "pk": 2, "fields": { "nome": "MMO" } },
+  { "model": "principal.estoqueprodutosubcategoria", "pk": 3, "fields": { "nome": "RPG" } },
+  { "model": "principal.estoqueprodutosubcategoria", "pk": 5, "fields": { "nome": "Lendária" } },
+  { "model": "principal.estoqueprodutosubcategoria", "pk": 6, "fields": { "nome": "Épica" } },
+  { "model": "principal.estoqueprodutosubcategoria", "pk": 7, "fields": { "nome": "Ultimate" } },
+  { "model": "principal.estoqueprodutosubcategoria", "pk": 8, "fields": { "nome": "Rara" } },
+  { "model": "principal.estoqueprodutosubcategoria", "pk": 8, "fields": { "nome": "Chroma" } },
+  { "model": "principal.estoqueprodutotag", "pk": 1, "fields": { "nome": "Evelynn" } },
+  { "model": "principal.estoqueprodutotag", "pk": 2, "fields": { "nome": "Lux" } },
+  { "model": "principal.estoqueprodutotag", "pk": 3, "fields": { "nome": "Xayah" } },
+  { "model": "principal.estoqueprodutotag", "pk": 4, "fields": { "nome": "League of Legends" } },
+  {
+    "model": "principal.usuario",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$LlxXu7oTFmDgtMvA1RQgYx$L52myw6+InGH4Ke8+sehR4Js2oINTaKYCOiuEfb7bqw=",
+      "last_login": "2022-08-20T23:52:03Z",
+      "is_superuser": true,
+      "username": "Dalton",
+      "first_name": "Dalton",
+      "last_name": "Lins",
+      "email": "dalton@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-08-20T23:48:59Z",
+      "imagem": "",
+      "moldura": "",
+      "color": "000000",
+      "pontos": 0,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "principal.usuario",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$cNpVTUtyKC4URWKpIoXohk$oSggyiIPBfKPRH4KOOt3IUweC0ikjjNt2C4F4CaOcW8=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "Jussara",
+      "first_name": "Jussara",
+      "last_name": "Kelly",
+      "email": "jussara@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-08-21T00:10:54Z",
+      "imagem": "",
+      "moldura": "",
+      "color": "000000",
+      "pontos": 0,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

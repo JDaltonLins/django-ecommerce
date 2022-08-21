@@ -1,0 +1,14 @@
+
+/* Center form with absolute and transform */
+form {
+    width: 320px;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+form > a {
+    font-size: small;
+}
