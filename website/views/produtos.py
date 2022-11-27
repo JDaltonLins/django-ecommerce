@@ -14,11 +14,11 @@ def produto(request, id, txt=''):
         produto: EstoqueProduto = EstoqueProduto.objects.get(id=id)
 
         if produto.data_lancamento is not None and produto.data_lancamento > timezone.now() and (not request.user.is_authenticated or request.user.is_superuser == False):
-            return redirect(reverse('produtos'))
+            return redirect_to(None, 'produtos')
 
         slug = produto.slug()
         if slug != txt:
-            return redirect(reverse('produto', args=(slug, produto.id)))
+            return redirect_to(request, ('produto', (slug, produto.id)))
 
         return render(request, 'paginas/produto.html', {
             "pagina": {
@@ -36,13 +36,41 @@ def produto(request, id, txt=''):
         return redirect(reverse('produtos'))
 
 
-order_map = {
+ORDER_MAP = {
     'nome': 'Nome',
     'data_lancamento': 'Data de Lançamento',
     'preco': 'Preço',
     'categoria': 'Categoria'
 }
 
+def redirect_to(request, page, **extra_fields):
+    search_params = request.GET.dict() if request else {}
+
+    for key, value in extra_fields.items():
+        if value is None:
+            del search_params[key]
+        else:
+            search_params[key] = value
+    
+    page, args = page if type(page) in (list, tuple) else (page, []) 
+
+    return redirect(f'{reverse(page, args=args)}?{urlencode(search_params)}' if search_params else reverse(page, args=args))
+
+def text_to_list(request, key):
+    lista = []
+
+    if not request or key not in request: 
+        return lista
+
+    text = request[key]
+    for rawId in text.split(','):
+        try:
+            lista.append(int(rawId.strip()))
+        except:
+            pass
+    
+    return lista
+    
 
 def produtos(request: HttpRequest):
     pagina = 1
@@ -54,66 +82,47 @@ def produtos(request: HttpRequest):
             pagina = 0
 
     if pagina < 1:
-        return redirect(reverse('produtos') + '?' + urlencode({**request.GET.dict(), **{'pagina': 1}}))
+        return redirect(request, 'produtos', pagina=1)
 
     produtos = EstoqueProduto.objects.all() if request.user.is_authenticated and request.user.is_superuser else EstoqueProduto.objects.filter(
         Q(data_lancamento__isnull=True) | Q(data_lancamento__lte=timezone.now()))
 
-    categorias = []
-    if 'categorias' in request.GET:
-        for categoria in request.GET['categorias'].split(','):
-            try:
-                categorias.append(int(categoria))
-            except ValueError:
-                pass
+    categorias = text_to_list(request.GET, 'categorias')
+    if categorias:
         produtos = produtos.filter(categoria__in=categorias)
 
-    subcategorias = []
-    if 'subcategorias' in request.GET:
-        for subcategoria in request.GET['subcategorias'].split(','):
-            try:
-                subcategorias.append(int(subcategoria))
-            except ValueError:
-                pass
+    subcategorias = text_to_list(request.GET, 'subcategorias')
+    if subcategorias:
         produtos = produtos.filter(id__in=EstoqueProdutoSubcategoria.objects.filter(
             id__in=subcategorias).values_list('estoqueproduto', flat=True))
 
-    tag_list = []
-    if 'tags' in request.GET:
-        for tag in request.GET['tags'].split(','):
-            try:
-                tag_list.append(int(tag))
-            except ValueError:
-                pass
-
+    tag_list = text_to_list(request.GET, 'tags')
+    if tag_list:
         produtos = produtos.filter(id__in=EstoqueProdutoTag.objects.filter(
             id__in=tag_list).values_list('estoqueproduto', flat=True))
 
-    # Realiza a ordenação dos produtos
-    order_foo = request.GET['order_by'] if 'order_by' in request.GET else 'data_lancamento'
-    order_by = ['data_lancamento',
-                order_map['data_lancamento'], '-', '- Data Lançamento']
+    order_list = ORDER_MAP
+    if "order_by" in request.GET:
+        order = request.GET["order_by"]
+        order_reverse, order_by = (True, order[1:]) if order.startswith("-") else (False, order)
 
-    order_name = order_foo.lstrip('-')  # Remove o - se existir
-    order_by = [order_name, order_map[order_name],
-                '-' if not order_foo.startswith('-') else '', '']
-    order_by[3] = f'{order_by[2]} {order_by[1]}'
-    if order_by[1]:
-        produtos = produtos.order_by(order_foo)
-    else:
-        gict = request.GET.dict()
-        gict.pop('order_by')
-        return redirect(reverse('produtos') + '?' + urlencode(gict))
+        # Caso não exista essa coluna de ordenação,
+        # redireciona para a pagina sem a definição desse argumento
+        if order_by not in ORDER_MAP:
+            return redirect_to(request, 'produtos', order_by=None)
 
-    order_map_rel = order_map.copy()
-    order_map_rel.pop(order_by[0])
+        produtos = produtos.order_by(order)
 
-    order_map_rel = {
-        **{f'{order_by[2]}{order_by[0]}': order_by[3]},
-        **order_map_rel
-    }
-    order_by[1] = ('- ' if order_foo.startswith('-') else '') + order_by[1]
+        del order_list[order_by]
 
+        order_key, order_value = (f'-{order_by}', f'- {ORDER_MAP[order_by]}') if not order_reverse \
+            else (order_by, ORDER_MAP[order_by])
+
+        order_list = {
+            order_key: order_value,
+            **order_list,
+        }
+    
     paginator = Paginator(produtos, 10)
 
     paginacao = None
@@ -133,8 +142,7 @@ def produtos(request: HttpRequest):
             "selected_categorias": categorias,
             "selected_subcategorias": subcategorias,
             "selected_tags": tag_list,
-            "ordem": order_by,
-            "ordens": order_map_rel.items(),
+            "ordens": order_list.items(),
             "paginacao": paginacao,
             "tags": EstoqueProdutoTag.objects.all(),
             "categorias": EstoqueProdutoCategoria.objects.all(),
